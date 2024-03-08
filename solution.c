@@ -15,12 +15,8 @@ int funkyBalanced(char* s);
 
 char* isBalanced(char* s) {
     int d = funkyBalanced(s);
-    int size = 0;
-    while (*s != 0){ // Final pass through catches edge case '()}' or similar
-        size ++;
-        s ++;
-    }
-    if(d % 2 == 1 && !(d + 1 < size)) // If distance parity odd and distance is accurate -> Balanced
+    int size = strlen(s);
+    if(d % 2 == 1 && d + 1 >= size) // If the distance parity is odd and distance is accurate -> Balanced
         return "YES";
     else 
         return "NO";
@@ -28,8 +24,8 @@ char* isBalanced(char* s) {
 
 /* This recursive method determines whether a string of brackets is balanced 
 or not. The returned integer is the distance to its matching bracket. A bracket
-will always have an odd distance to its matching bracket. So if it is an even 
-distance away then its inner brackets are not balanced, hence its string of 
+will always have an odd distance to its matching bracket. If it has an even 
+distance to its matching bracket, its inner brackets are not balanced, hence the string of 
 brackets is not balanced.
 */
 int funkyBalanced(char *s){
@@ -37,10 +33,10 @@ int funkyBalanced(char *s){
     if (*s == 0)
         return d; // No brackets is balanced brackets
     else if (strchr(")]}", *s) != NULL)
-        d = -1; // No effect or catch edge case '}' or similar
+        d = -1; // No effect or catch edge case '}'
     else
         if(strchr(")]}", *(s+1)) != NULL){ // Base case d = 1
-            if(!bracketMap(*s, *(s+1))) // if the bracket next to it does not match
+            if(!bracketMap(*s, *(s+1))) // Check if brackets match
                 d = 0;
         }
         else if (strchr("([{", *(s+1)) != NULL){ // push the next bracket onto the stack
@@ -51,8 +47,8 @@ int funkyBalanced(char *s){
         } 
         else
             d = 0; // handles '('
-    if (d % 2 == 1)
-        d = d + 1 + funkyBalanced(s+d+1); // Finally, test the next set of brackets 
+    if (d % 2 == 1) 
+        d = d + 1 + funkyBalanced(s+d+1); // If odd distance, test the next set of brackets 
     return d;
 }
 
